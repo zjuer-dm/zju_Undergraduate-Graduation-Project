@@ -39,7 +39,7 @@ class DepthEncoder(nn.Module):
         if resnet_pretrain:
             print('Loading PointNav pre-trained Resnet50 for Depth ...')
             # TODO: Change to your ddppo model path
-            ddppo_pn_depth_encoder_weights = torch.load('/home/wdm/vln-ce/data/ddppo-models/gibson-2plus-resnet50.pth')
+            ddppo_pn_depth_encoder_weights = torch.load('/home/wdm/ICRA2026_etpnav/data/ddppo-models/gibson-2plus-resnet50.pth')
             weights_dict = {}
             for k, v in ddppo_pn_depth_encoder_weights["state_dict"].items():
                 split_layer_name = k.split(".")[2:]
