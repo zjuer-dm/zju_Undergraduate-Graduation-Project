@@ -23,7 +23,7 @@
     "warmup_steps": 20000,
     "seed": 0,
     "fp16": false,
-    "n_workers": 1,
+    "n_workers": 2,
     "pin_mem": true,
     "init_pretrained": "roberta",
 
