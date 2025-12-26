@@ -11,8 +11,7 @@ from scipy.ndimage import gaussian_filter
 # 4-camera setup: 40 angle bins (was 120 for 12-camera)
 ANGLES = 40
 DISTANCES = 12
-# TODO: Change to your connectivity graph path
-RAW_GRAPH_PATH = '/home/wdm/habitat_connectivity_graph/%s.json'
+RAW_GRAPH_PATH = '/home/wdm/zju_Undergraduate-Graduation-Project/waypoint-predictor/habitat_connectivity_graph_folder/%s.json'
 
 RADIUS = 3.25  # corresponding to max forward distance of 2 meters
 

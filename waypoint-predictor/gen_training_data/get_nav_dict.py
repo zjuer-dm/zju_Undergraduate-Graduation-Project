@@ -6,10 +6,8 @@ from habitat.sims import make_sim
 from utils import Simulator
 
 config_path = 'gen_training_data/config.yaml'
-# TODO: Change to your data path
-scene_path = '/home/wdm/vln-ce/data/scene_datasets/mp3d/{scan}/{scan}.glb'
-# TODO: Change to your connectivity graph path
-RAW_GRAPH_PATH= '/home/wdm/habitat_connectivity_graph/%s.json'
+scene_path = '/home/wdm/ETPNav/data/scene_datasets/mp3d/{scan}/{scan}.glb'
+RAW_GRAPH_PATH = '/home/wdm/zju_Undergraduate-Graduation-Project/waypoint-predictor/habitat_connectivity_graph_folder/%s.json'
 # 4-camera setup: 40 angle bins (was 120 for 12-camera, ratio 120/12=10, so 4*10=40)
 NUMBER = 40
 
