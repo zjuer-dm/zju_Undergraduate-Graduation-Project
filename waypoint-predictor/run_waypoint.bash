@@ -1,4 +1,6 @@
 
+export CUDA_VISIBLE_DEVICES=0
+
 flag="--EXP_ID wp-train-4cam
 
       --TRAINEVAL train
@@ -8,7 +10,7 @@ flag="--EXP_ID wp-train-4cam
       --NUM_IMGS 4
 
       --EPOCH 300
-      --BATCH_SIZE 8
+      --BATCH_SIZE 32
       --LEARNING_RATE 1e-6
 
       --WEIGHT 0

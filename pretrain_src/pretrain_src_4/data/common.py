@@ -49,19 +49,31 @@ def get_angle_fts(headings, elevations, angle_feat_size):
     return ang_fts
 
 def get_view_rel_angles(baseViewId=0):
-    rel_angles = np.zeros((36, 2), dtype=np.float32)
+    """Get relative angles for 4-camera setup (12 views = 4 cameras × 3 elevations).
+    
+    View layout:
+    - Views 0-3:   Bottom elevation (-30°), headings 0°, 90°, 180°, 270°
+    - Views 4-7:   Middle elevation (0°),   headings 0°, 90°, 180°, 270°
+    - Views 8-11:  Top elevation (+30°),    headings 0°, 90°, 180°, 270°
+    """
+    # 4-camera setup: 12 total views (4 horizontal × 3 elevations)
+    NUM_VIEWS = 12
+    NUM_CAMERAS = 4  # 4 horizontal cameras per elevation
+    
+    rel_angles = np.zeros((NUM_VIEWS, 2), dtype=np.float32)
 
-    base_heading = (baseViewId % 12) * math.radians(30)
-    base_elevation = (baseViewId // 12 - 1) * math.radians(30)
-    for ix in range(36):
+    base_heading = (baseViewId % NUM_CAMERAS) * math.radians(90)  # Each camera covers 90°
+    base_elevation = (baseViewId // NUM_CAMERAS - 1) * math.radians(30)  # -30°, 0°, +30°
+    
+    for ix in range(NUM_VIEWS):
         if ix == 0:
             heading = 0
             elevation = math.radians(-30)
-        elif ix % 12 == 0:
+        elif ix % NUM_CAMERAS == 0:  # Switch elevation every 4 views
             heading = 0
             elevation += math.radians(30)
         else:
-            heading += math.radians(30)
+            heading += math.radians(90)  # 90° heading increment for 4 cameras
         rel_angles[ix, 0] = heading - base_heading
         rel_angles[ix, 1] = elevation - base_elevation
 

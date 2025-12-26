@@ -53,7 +53,8 @@ class ReverieTextPathData(object):
 
         
         self.graphs, self.shortest_distances, self.shortest_paths = load_nav_graphs(connectivity_dir) 
-        self.all_point_rel_angles = [get_view_rel_angles(baseViewId=i) for i in range(36)] 
+        # 4-camera setup: 12 views (4 cameras × 3 elevations)
+        self.all_point_rel_angles = [get_view_rel_angles(baseViewId=i) for i in range(12)] 
         self.all_point_angle_fts = [get_angle_fts(x[:, 0], x[:, 1], self.angle_feat_size) for x in self.all_point_rel_angles] 
 
         self.data = []
@@ -217,8 +218,8 @@ class ReverieTextPathData(object):
             prev_vp = path[-2]
             cur_vp = path[-1]
             viewidx = self.scanvp_cands['%s_%s'%(scan, prev_vp)][cur_vp][0]
-            heading = (viewidx % 12) * math.radians(30)
-            elevation = (viewidx // 12 - 1) * math.radians(30)
+            heading = (viewidx % 4) * math.radians(90)  # 4-camera: 90° per camera
+            elevation = (viewidx // 4 - 1) * math.radians(30)
         return heading, elevation
 
     def get_traj_pano_fts(self, scan, path):
@@ -238,12 +239,13 @@ class ReverieTextPathData(object):
             for k, v in nav_cands.items():
                 used_viewidxs.add(v[0])
                 view_img_fts.append(view_fts[v[0]])
-                view_angle = self.all_point_rel_angles[12][v[0]]
+                # 4-camera: use view index 4 as base (middle elevation, first camera)
+                view_angle = self.all_point_rel_angles[4][v[0]]
                 view_angles.append([view_angle[0] + v[2], view_angle[1] + v[3]])
                 cand_vpids.append(k)
-            # non cand views
-            view_img_fts.extend([view_fts[idx] for idx in range(36) if idx not in used_viewidxs])
-            view_angles.extend([self.all_point_rel_angles[12][idx] for idx in range(36) if idx not in used_viewidxs])
+            # non cand views: 12 total views for 4-camera setup
+            view_img_fts.extend([view_fts[idx] for idx in range(12) if idx not in used_viewidxs])
+            view_angles.extend([self.all_point_rel_angles[4][idx] for idx in range(12) if idx not in used_viewidxs])
             # combine cand views and noncand views
             view_img_fts = np.stack(view_img_fts, 0) 
             view_angles = np.stack(view_angles, 0)
@@ -271,7 +273,7 @@ class ReverieTextPathData(object):
                 )
             )
             traj_nav_types.append(
-                [1] * len(cand_vpids) + [0] * (36 - len(used_viewidxs)) + [2] * len(obj_img_fts)
+                [1] * len(cand_vpids) + [0] * (12 - len(used_viewidxs)) + [2] * len(obj_img_fts)  # 12 views for 4-camera
             )
             traj_cand_vpids.append(cand_vpids)
 
@@ -487,13 +489,14 @@ class R2RTextPathData(ReverieTextPathData):
                 used_viewidxs.add(v[0])
                 view_img_fts.append(view_fts[v[0]]) 
                 view_dep_fts.append(dep_fts[v[0]]) 
-                view_angle = self.all_point_rel_angles[12][v[0]]
+                # 4-camera: use view index 4 as base (middle elevation, first camera)
+                view_angle = self.all_point_rel_angles[4][v[0]]
                 view_angles.append([view_angle[0] + v[2], view_angle[1] + v[3]]) 
                 cand_vpids.append(k) 
-            # non cand views
-            view_img_fts.extend([view_fts[idx] for idx in range(36) if idx not in used_viewidxs])
-            view_dep_fts.extend([dep_fts[idx] for idx in range(36) if idx not in used_viewidxs])
-            view_angles.extend([self.all_point_rel_angles[12][idx] for idx in range(36) if idx not in used_viewidxs]) 
+            # non cand views: 12 total views for 4-camera setup
+            view_img_fts.extend([view_fts[idx] for idx in range(12) if idx not in used_viewidxs])
+            view_dep_fts.extend([dep_fts[idx] for idx in range(12) if idx not in used_viewidxs])
+            view_angles.extend([self.all_point_rel_angles[4][idx] for idx in range(12) if idx not in used_viewidxs]) 
 
             view_img_fts = np.stack(view_img_fts, 0) 
             view_dep_fts = np.stack(view_dep_fts, 0) 
@@ -504,7 +507,7 @@ class R2RTextPathData(ReverieTextPathData):
             traj_view_img_fts.append(view_img_fts)
             traj_view_dep_fts.append(view_dep_fts)
             traj_loc_fts.append(view_ang_fts)
-            traj_nav_types.append([1] * len(cand_vpids) + [0] * (36 - len(used_viewidxs)))
+            traj_nav_types.append([1] * len(cand_vpids) + [0] * (12 - len(used_viewidxs)))  # 12 views for 4-camera
             traj_cand_vpids.append(cand_vpids)
             
             last_vp_angles = view_angles 
