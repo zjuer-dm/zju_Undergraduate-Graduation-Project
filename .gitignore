@@ -68,3 +68,4 @@ data/datasets/
 
 *.ply
 *.obj
+*.model
