@@ -37,7 +37,7 @@ from vlnce_baselines.common.utils import extract_instruction_tokens
 from vlnce_baselines.models.graph_utils import GraphMap, MAX_DIST
 from vlnce_baselines.utils import reduce_loss
 
-from .utils import get_camera_orientations12
+from .utils import get_camera_orientations4  # 4-camera setup
 from .utils import (
     length2mask, dir_angle_feature_with_ele,
 )
@@ -126,7 +126,7 @@ class RLTrainer(BaseVLNCETrainer):
         resize_config = self.config.RL.POLICY.OBS_TRANSFORMS.RESIZER_PER_SENSOR.SIZES
         crop_config = self.config.RL.POLICY.OBS_TRANSFORMS.CENTER_CROPPER_PER_SENSOR.SENSOR_CROPS
         task_config = self.config.TASK_CONFIG
-        camera_orientations = get_camera_orientations12()
+        camera_orientations = get_camera_orientations4()  # 4-camera setup
         print(f"init camera information: resize_config:{resize_config}, crop_config:{crop_config}, new_camera_heading:{camera_orientations}")
 
         for sensor_type in ["RGB", "DEPTH"]:
@@ -438,7 +438,7 @@ class RLTrainer(BaseVLNCETrainer):
         
         for i in range(self.envs.num_envs):
             rgb_fts, dep_fts, loc_fts , nav_types = [], [], [], []
-            cand_idxes = np.zeros(12, dtype=np.bool)
+            cand_idxes = np.zeros(4, dtype=np.bool)  # 4-camera setup
             cand_idxes[obs['cand_img_idxes'][i]] = True
 
             rgb_fts.append(obs['cand_rgb'][i])
@@ -449,7 +449,7 @@ class RLTrainer(BaseVLNCETrainer):
             rgb_fts.append(obs['pano_rgb'][i][~cand_idxes])
             dep_fts.append(obs['pano_depth'][i][~cand_idxes])
             loc_fts.append(obs['pano_angle_fts'][~cand_idxes])
-            nav_types += [0] * (12-np.sum(cand_idxes))
+            nav_types += [0] * (4-np.sum(cand_idxes))  # 4-camera setup
             
             batch_rgb_fts.append(torch.cat(rgb_fts, dim=0))
             batch_dep_fts.append(torch.cat(dep_fts, dim=0))

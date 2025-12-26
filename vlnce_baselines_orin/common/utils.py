@@ -96,12 +96,3 @@ def get_camera_orientations12():
     for k in range(1,12):
         orient_dict[str(base_angle_deg*k)] = [0.0, base_angle_rad*k, 0.0]
     return orient_dict
-
-def get_camera_orientations4():
-    """4-camera setup with 90° spacing"""
-    base_angle_deg = 90
-    base_angle_rad = math.pi / 2
-    orient_dict = {}
-    for k in range(1, 4):  # 90°, 180°, 270°
-        orient_dict[str(base_angle_deg*k)] = [0.0, base_angle_rad*k, 0.0]
-    return orient_dict

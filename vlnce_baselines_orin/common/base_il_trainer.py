@@ -48,7 +48,7 @@ from vlnce_baselines.common.utils import *
 from habitat_extensions.measures import NDTW
 from fastdtw import fastdtw
 
-from ..utils import get_camera_orientations4  # 4-camera setup
+from ..utils import get_camera_orientations12
 from ..utils import (
     length2mask, dir_angle_feature, dir_angle_feature_with_ele,
 )
@@ -817,7 +817,7 @@ class BaseVLNCETrainer(BaseILTrainer):
         resize_config = self.config.RL.POLICY.OBS_TRANSFORMS.RESIZER_PER_SENSOR.SIZES
         crop_config = self.config.RL.POLICY.OBS_TRANSFORMS.CENTER_CROPPER_PER_SENSOR.SENSOR_CROPS
         config = self.config.TASK_CONFIG
-        camera_orientations = get_camera_orientations4()  # 4-camera setup
+        camera_orientations = get_camera_orientations12()
 
         # sensor_uuids = []
         for sensor_type in ["RGB", "DEPTH"]:
@@ -925,7 +925,7 @@ class BaseVLNCETrainer(BaseILTrainer):
         resize_config = self.config.RL.POLICY.OBS_TRANSFORMS.RESIZER_PER_SENSOR.SIZES
         crop_config = self.config.RL.POLICY.OBS_TRANSFORMS.CENTER_CROPPER_PER_SENSOR.SENSOR_CROPS
         config = self.config.TASK_CONFIG
-        camera_orientations = get_camera_orientations4()  # 4-camera setup
+        camera_orientations = get_camera_orientations12()
         for sensor_type in ["RGB", "DEPTH"]:
             resizer_size = dict(resize_config)[sensor_type.lower()]
             cropper_size = dict(crop_config)[sensor_type.lower()]

@@ -87,7 +87,8 @@ def print_progress(iteration, total, prefix='', suffix='', decimals=1, bar_lengt
     sys.stdout.flush()
 
 
-def get_attention_mask(num_imgs=4, neighbor=1):  # 4-camera setup\n    assert neighbor <= 5
+def get_attention_mask(num_imgs=12, neighbor=1):
+    assert neighbor <= 5
 
     mask = np.zeros((num_imgs,num_imgs))
     t = np.zeros(num_imgs)

@@ -141,8 +141,8 @@ class ETP(Net):
         self.rgb_encoder = CLIPEncoder(self.device)
         self.space_pool_rgb = nn.Sequential(nn.AdaptiveAvgPool2d((1,1)), nn.Flatten(start_dim=2))
     
-        self.pano_img_idxes = np.arange(0, 12, dtype=np.int64)        # 逆时针
-        pano_angle_rad_c = (1-self.pano_img_idxes/12) * 2 * math.pi   # 对应到逆时针
+        self.pano_img_idxes = np.arange(0, 4, dtype=np.int64)        # 4-camera: 逆时针
+        pano_angle_rad_c = (1-self.pano_img_idxes/4) * 2 * math.pi   # 4-camera: 90° spacing
         self.pano_angle_fts = angle_feature_torch(torch.from_numpy(pano_angle_rad_c))
 
     @property  # trivial argument, just for init with habitat
@@ -176,8 +176,8 @@ class ETP(Net):
             # batch_size = observations['instruction'].size(0)
             batch_size = observations['rgb'].shape[0]
             ''' encoding rgb/depth at all directions ----------------------------- '''
-            NUM_ANGLES = 120    # 120 angles 3 degrees each
-            NUM_IMGS = 12
+            NUM_ANGLES = 40     # 4-camera: 40 angles, 9 degrees each
+            NUM_IMGS = 4        # 4-camera setup
             NUM_CLASSES = 12    # 12 distances at each sector
             depth_batch = torch.zeros_like(observations['depth']).repeat(NUM_IMGS, 1, 1, 1)
             rgb_batch = torch.zeros_like(observations['rgb']).repeat(NUM_IMGS, 1, 1, 1)
@@ -255,7 +255,7 @@ class ETP(Net):
                     (waypoint_heatmap_logits[:,-HEATMAP_OFFSET:,:], 
                     waypoint_heatmap_logits[:,:-HEATMAP_OFFSET,:],
                 ), dim=1)
-                batch_way_heats_regional = batch_way_heats_regional.reshape(batch_size, 12, 10, 12)
+                batch_way_heats_regional = batch_way_heats_regional.reshape(batch_size, 4, 10, 12)  # 4-camera
                 batch_sample_angle_idxes = []
                 batch_sample_distance_idxes = []
                 # batch_way_log_prob = []
@@ -264,7 +264,7 @@ class ETP(Net):
                     angle_idxes = batch_output_map[j].nonzero()[:, 0]
                     # clockwise image indexes (same as batch_x_norm)
                     img_idxes = ((angle_idxes.cpu().numpy()+5) // 10)
-                    img_idxes[img_idxes==12] = 0
+                    img_idxes[img_idxes==4] = 0  # 4-camera: wrap at 4
                     # # candidate waypoint states
                     # way_feats_regional = way_feats[j][img_idxes]
                     # heatmap regions for sampling
@@ -307,24 +307,24 @@ class ETP(Net):
                     angle_idxes = batch_output_map[j].nonzero()[:, 0]
                     distance_idxes = batch_output_map[j].nonzero()[:, 1]
                 # for angle & distance
-                angle_rad_c = angle_idxes.cpu().float()/120*2*math.pi       # 顺时针
-                angle_rad_cc = 2*math.pi-angle_idxes.float()/120*2*math.pi  # 逆时针
+                angle_rad_c = angle_idxes.cpu().float()/40*2*math.pi       # 4-camera: 40 angles, 顺时针
+                angle_rad_cc = 2*math.pi-angle_idxes.float()/40*2*math.pi  # 逆时针
                 cand_angle_fts.append( angle_feature_torch(angle_rad_c) )
                 cand_angles.append(angle_rad_cc.tolist())
                 cand_distances.append( ((distance_idxes + 1)*0.25).tolist() )
                 # for img idxes
-                img_idxes = 12 - (angle_idxes.cpu().numpy()+5) // 10        # 逆时针
-                img_idxes[img_idxes==12] = 0
+                img_idxes = 4 - (angle_idxes.cpu().numpy()+5) // 10        # 4-camera: 逆时针
+                img_idxes[img_idxes==4] = 0  # 4-camera: wrap at 4
                 cand_img_idxes.append(img_idxes)
                 # for rgb & depth
                 cand_rgb.append(rgb_feats[j, img_idxes, ...])
                 cand_depth.append(depth_feats[j, img_idxes, ...])
             
             # for pano
-            pano_rgb = rgb_feats                            # B x 12 x 2048
-            pano_depth = depth_feats                        # B x 12 x 128
-            pano_angle_fts = deepcopy(self.pano_angle_fts)  # 12 x 4
-            pano_img_idxes = deepcopy(self.pano_img_idxes)  # 12
+            pano_rgb = rgb_feats                            # B x 4 x 512 (4-camera)
+            pano_depth = depth_feats                        # B x 4 x 128 (4-camera)
+            pano_angle_fts = deepcopy(self.pano_angle_fts)  # 4 x 4
+            pano_img_idxes = deepcopy(self.pano_img_idxes)  # 4
 
             # cand_angle_fts 顺时针
             # cand_angles 逆时针
@@ -337,10 +337,10 @@ class ETP(Net):
                 'cand_angles': cand_angles,         # [K]，表示waypoints的角度，用0～2pi之间的弧度值来表示
                 'cand_distances': cand_distances,   # [K]
 
-                'pano_rgb': pano_rgb,               # B x 12 x 2048
-                'pano_depth': pano_depth,           # B x 12 x 128
-                'pano_angle_fts': pano_angle_fts,   # 12 x 4
-                'pano_img_idxes': pano_img_idxes,   # 12 
+                'pano_rgb': pano_rgb,               # B x 4 x 512 (4-camera)
+                'pano_depth': pano_depth,           # B x 4 x 128 (4-camera)
+                'pano_angle_fts': pano_angle_fts,   # 4 x 4
+                'pano_img_idxes': pano_img_idxes,   # 4 
             }
             
             return outputs

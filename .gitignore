@@ -19,3 +19,52 @@ __pycache__/
 /bert-base-uncased
 *.bin
 /extra_files
+
+
+
+# --- 虚拟环境 ---
+venv/
+env/
+.venv/
+
+# --- IDE 配置 (不需要上传到服务器) ---
+.vscode/
+.idea/
+
+# --- 数据集 (这是造成 10000+ 更改的主要原因) ---
+data/
+datasets/
+# 如果你的数据在特定的其他文件夹，请把名字写在这里
+
+# --- 训练输出和模型权重 ---
+checkpoints/
+models/
+*.pt
+*.pth
+*.ckpt
+*.pkl
+
+# --- 日志文件 ---
+logs/
+runs/
+*.log
+output/
+results/
+
+
+# 忽略所有数据集和数据文件
+data/
+data/datasets/
+
+# 忽略常见的压缩大文件（作为双重保险）
+*.gz
+*.zip
+*.tar
+*.pkl
+*.h5
+*.pth
+
+*_connectivity.json
+
+*.ply
+*.obj

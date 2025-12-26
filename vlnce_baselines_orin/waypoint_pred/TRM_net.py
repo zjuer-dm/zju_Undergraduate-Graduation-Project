@@ -12,12 +12,12 @@ class BinaryDistPredictor_TRM(nn.Module):
 
         self.device = device
 
-        self.num_angles = 40   # 4-camera: 40 angles (360°/40 = 9° per angle)
-        self.num_imgs = 4       # 4-camera setup
+        self.num_angles = 120
+        self.num_imgs = 12
         self.n_classes = 12  # num of distances
         self.TRM_LAYER = 2
         self.TRM_NEIGHBOR = 1
-        self.HEATMAP_OFFSET = 5  # 40/4/2 = 5
+        self.HEATMAP_OFFSET = 5
 
         # self.visual_fc_rgb = nn.Sequential(
         #     nn.Flatten(),
