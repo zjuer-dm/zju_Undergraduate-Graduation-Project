@@ -63,6 +63,9 @@ data/datasets/
 *.pkl
 *.h5
 *.pth
+*.hdf5
+*.json
+*.hdf
 
 *_connectivity.json
 

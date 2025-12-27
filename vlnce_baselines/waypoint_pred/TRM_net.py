@@ -19,16 +19,18 @@ class BinaryDistPredictor_TRM(nn.Module):
         self.TRM_NEIGHBOR = 1
         self.HEATMAP_OFFSET = 5  # 40/4/2 = 5
 
-        # self.visual_fc_rgb = nn.Sequential(
-        #     nn.Flatten(),
-        #     nn.Linear(np.prod([2048,7,7]), hidden_dim),
-        #     nn.ReLU(True),
-        # )
+        # RGB encoder FC (matches training code)
+        self.visual_fc_rgb = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(np.prod([2048,7,7]), hidden_dim),
+            nn.ReLU(True),
+        )
         self.visual_fc_depth = nn.Sequential(
             nn.Flatten(),
             nn.Linear(np.prod([128,4,4]), hidden_dim),
             nn.ReLU(True),
         )
+        # RGB+Depth merge (matches training code)
         self.visual_merge = nn.Sequential(
             nn.Linear(hidden_dim*2, hidden_dim),
             nn.ReLU(True),
@@ -62,14 +64,14 @@ class BinaryDistPredictor_TRM(nn.Module):
     def forward(self, rgb_feats, depth_feats):
         bsi = rgb_feats.size(0) // self.num_imgs
 
-        # rgb_x = self.visual_fc_rgb(rgb_feats).reshape(
-        #     bsi, self.num_imgs, -1)
+        # RGB+Depth fusion (matches training code)
+        rgb_x = self.visual_fc_rgb(rgb_feats).reshape(
+            bsi, self.num_imgs, -1)
         depth_x = self.visual_fc_depth(depth_feats).reshape(
             bsi, self.num_imgs, -1)
-        # vis_x = self.visual_merge(
-        #     torch.cat((rgb_x, depth_x), dim=-1)
-        # )
-        vis_x = depth_x
+        vis_x = self.visual_merge(
+            torch.cat((rgb_x, depth_x), dim=-1)
+        )
 
         attention_mask = self.mask.repeat(bsi,1,1,1)
         vis_rel_x = self.waypoint_TRM(
