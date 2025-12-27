@@ -140,7 +140,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_name', default='ViT-B/32')
     parser.add_argument('--checkpoint_file', default=None)
     parser.add_argument('--connectivity_dir', default='precompute_img_features/connectivity')
-    parser.add_argument('--img_db', default='pretrain_src/img_features/habitat_256x256_vfov60_bgr.hdf5')
+    parser.add_argument('--img_db', default='pretrain_src/img_features/habitat_256x256_vfov90_bgr.hdf5')  # 4-camera
     parser.add_argument('--out_image_logits', action='store_true', default=False)
     parser.add_argument('--output_file', default='pretrain_src/img_features/CLIP-ViT-B-32-views-habitat.hdf5')
     parser.add_argument('--batch_size', default=12, type=int)

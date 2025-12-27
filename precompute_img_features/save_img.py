@@ -22,7 +22,7 @@ from scipy.spatial.transform import Rotation as R
 VIEWPOINT_SIZE = 12
 WIDTH = 256
 HEIGHT = 256
-VFOV = 60
+VFOV = 90  # 4-camera: 90° FOV (changed from 60° for 12-camera)
 
 def build_simulator(connectivity_dir):
     sim = MatterSim.Simulator()
@@ -68,7 +68,7 @@ def get_img(proc_id, out_queue, scanvp_list, args):
             if habitat_sim != None:
                 habitat_sim.sim.close()
             habitat_sim = HabitatUtils(f'data/scene_datasets/mp3d/{scan_id}/{scan_id}.glb', 
-                                       int(0), 60, HEIGHT, WIDTH)
+                                       int(0), 90, HEIGHT, WIDTH)  # 4-camera: HFOV=90
             pre_scan = scan_id
 
         # Get the viewpoint position using MatterSim
