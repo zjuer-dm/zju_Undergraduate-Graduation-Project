@@ -51,8 +51,15 @@ def load_viewpoint_ids(connectivity_dir):
 def get_img(proc_id, out_queue, scanvp_list, args):
     print('start proc_id: %d' % proc_id)
 
-    # Set up the simulator
+    # Set up the simulator (only used to get viewpoint positions)
     sim = build_simulator(args.connectivity_dir)
+    
+    # Define 4 horizontal directions (0°, 90°, 180°, 270°) and 3 elevations (-30°, 0°, 30°)
+    # This gives us 12 views total (4 * 3 = 12)
+    # Order: elevation 0 (down) with 4 headings, elevation 1 (middle) with 4 headings, elevation 2 (up) with 4 headings
+    HORIZONTAL_VIEWS = 4
+    headings = [i * 2 * math.pi / HORIZONTAL_VIEWS for i in range(HORIZONTAL_VIEWS)]  # 0, π/2, π, 3π/2
+    elevations = [math.radians(-30), math.radians(0), math.radians(30)]  # down, middle, up
     
     pre_scan = None
     habitat_sim = None
@@ -64,35 +71,35 @@ def get_img(proc_id, out_queue, scanvp_list, args):
                                        int(0), 60, HEIGHT, WIDTH)
             pre_scan = scan_id
 
+        # Get the viewpoint position using MatterSim
+        sim.newEpisode([scan_id], [viewpoint_id], [0], [0])
+        state = sim.getState()[0]
+        x, y, z = state.location.x, state.location.y, state.location.z
+        habitat_position = [x, z - 1.25, -y]
+
         images = []
-        for ix in range(VIEWPOINT_SIZE):
-            if ix == 0:
-                sim.newEpisode([scan_id], [viewpoint_id], [0], [math.radians(-30)])
-            elif ix % 4 == 0:  # Switch elevation every 4 views (was 12 for 12-camera)
-                sim.makeAction([0], [1.0], [1.0])
-            else:
-                sim.makeAction([0], [1.0], [0])
-            state = sim.getState()[0]
-            assert state.viewIndex == ix
+        # Generate 12 views: 3 elevation levels * 4 horizontal directions
+        for e in elevations:
+            for h in headings:
+                # Convert heading and elevation to habitat rotation
+                mp3d_h = np.array([0, 2 * math.pi - h, 0])  # counter-clock heading
+                mp3d_e = np.array([e, 0, 0])
+                rotvec_h = R.from_rotvec(mp3d_h)
+                rotvec_e = R.from_rotvec(mp3d_e)
+                habitat_rotation = (rotvec_h * rotvec_e).as_quat()
+                habitat_sim.sim.set_agent_state(habitat_position, habitat_rotation)
 
-            x, y, z, h, e = state.location.x, state.location.y, state.location.z, state.heading, state.elevation
-            habitat_position = [x, z-1.25, -y]
-            mp3d_h = np.array([0, 2*math.pi-h, 0]) # counter-clock heading
-            mp3d_e = np.array([e, 0, 0])
-            rotvec_h = R.from_rotvec(mp3d_h)
-            rotvec_e = R.from_rotvec(mp3d_e)
-            habitat_rotation = (rotvec_h * rotvec_e).as_quat()
-            habitat_sim.sim.set_agent_state(habitat_position, habitat_rotation)
-
-            if args.img_type == 'rgb':
-                image = habitat_sim.render('rgb')[:, :, ::-1]
-            elif args.img_type == 'depth':
-                image = habitat_sim.render('depth')
-            images.append(image)
+                if args.img_type == 'rgb':
+                    image = habitat_sim.render('rgb')[:, :, ::-1]
+                elif args.img_type == 'depth':
+                    image = habitat_sim.render('depth')
+                images.append(image)
+        
         images = np.stack(images, axis=0)
         out_queue.put((scan_id, viewpoint_id, images))
 
     out_queue.put(None)
+
 
 def build_img_file(args):
 

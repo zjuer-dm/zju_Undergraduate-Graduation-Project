@@ -38,7 +38,7 @@ datasets/
 
 # --- 训练输出和模型权重 ---
 checkpoints/
-models/
+
 *.pt
 *.pth
 *.ckpt
