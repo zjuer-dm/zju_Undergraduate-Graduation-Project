@@ -30,7 +30,8 @@ env/
 # --- IDE 配置 (不需要上传到服务器) ---
 .vscode/
 .idea/
-
+# image_feature/
+# img_features/
 # --- 数据集 (这是造成 10000+ 更改的主要原因) ---
 data/
 datasets/
