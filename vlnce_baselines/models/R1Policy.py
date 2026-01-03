@@ -144,7 +144,7 @@ class ETP(Net):
         self.pano_img_idxes = np.arange(0, 4, dtype=np.int64)        # 4-camera: 逆时针
         # Fixed: 使用 idx/N * 2π 生成逆时针角度 [0°, 90°, 180°, 270°]
         # 与预训练 get_view_rel_angles() 和 pano_rgb 顺序保持一致
-        pano_angle_rad_c = self.pano_img_idxes/4 * 2 * math.pi       # 4-camera: 90° spacing
+        pano_angle_rad_c = (1-self.pano_img_idxes/4) * 2 * math.pi       # 4-camera: 90° spacing
         self.pano_angle_fts = angle_feature_torch(torch.from_numpy(pano_angle_rad_c))
 
     @property  # trivial argument, just for init with habitat

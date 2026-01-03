@@ -130,7 +130,7 @@ def build_feature_file(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name', default='resnet50')
-    parser.add_argument('--checkpoint_file', default='data/ddppo-models/gibson-2plus-resnet50.pth')
+    parser.add_argument('--checkpoint_file', default='/home/wdm/ICRA2026_etpnav/data/ddppo-models/gibson-2plus-resnet50.pth')
     parser.add_argument('--connectivity_dir', default='precompute_img_features/connectivity')
     parser.add_argument('--img_db', default='pretrain_src/img_features/habitat_256x256_vfov60_depth.hdf5')
     parser.add_argument('--out_image_logits', action='store_true', default=False)

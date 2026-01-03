@@ -147,8 +147,8 @@ def cleanup_checkpoints(top_checkpoints, ckpts_dir='ckpts'):
 
 
 def main():
-    base_path = 'pretrained/r2r_rxr_ce/mlm.sap_habitat_depth/'
-    log_path = 'store2/'
+    base_path = '/home/wdm/workspace/zju_Undergraduate-Graduation-Project/pretrained/r2r_rxr_ce_4cam/mlm.sap_habitat_depth/logs/'
+    log_path = ''
     log_file = 'log.txt'
     ckpt_path = 'ckpts'
 
