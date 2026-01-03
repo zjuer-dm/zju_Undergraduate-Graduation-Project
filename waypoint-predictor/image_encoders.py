@@ -30,15 +30,16 @@ class RGBEncoder(nn.Module):
         )
 
     def forward(self, rgb_imgs):
-        # rgb_imgs shape: (batch, num_imgs, H, W, C)
+        # rgb_imgs shape from dataloader: (batch, num_imgs, 3, 224, 224)
+        # Dataloader only converts to float [0,1], no normalization applied
         rgb_shape = rgb_imgs.size()
         rgb_imgs = rgb_imgs.reshape(
             rgb_shape[0]*rgb_shape[1], 
             rgb_shape[2], rgb_shape[3], rgb_shape[4]
         )
+        # Now: (batch*num_imgs, 3, 224, 224)
         
-        # Convert to (batch, C, H, W)
-        rgb_imgs = rgb_imgs.permute(0, 3, 1, 2)
+        # Apply CLIP normalization
         rgb_imgs = self.rgb_transform(rgb_imgs)
         
         # CLIP encoding

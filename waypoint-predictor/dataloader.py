@@ -19,11 +19,8 @@ class RGBDepthPano(Dataset):
         self.navigability_dict = navigability_dict
 
         self.rgb_transform = torch.nn.Sequential(
-            # [transforms.Resize((256,341)),
-            #  transforms.CenterCrop(self.RGB_INPUT_DIM),
-            #  transforms.ToTensor(),]
+            # Don't normalize here - CLIP encoder will apply CLIP-specific normalization
             transforms.ConvertImageDtype(torch.float),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
             )
         # self.depth_transform = transforms.Compose(
         #     # [transforms.Resize((self.DEPTH_INPUT_DIM, self.DEPTH_INPUT_DIM)),
