@@ -118,7 +118,7 @@ case $mode in
 esac
 
 # 命令行运行：
-# CUDA_VISIBLE_DEVICES=0,1,2,3 bash run_r2r/main_server.bash dagger 2333
-# CUDA_VISIBLE_DEVICES=0,1,2,3 bash run_r2r/main_server.bash grpo 2333
-# CUDA_VISIBLE_DEVICES=0,1,2,3 bash run_r2r/main_server.bash eval 2333
-# CUDA_VISIBLE_DEVICES=0,1,2,3 bash run_r2r/main_server.bash infer 2333
+# CUDA_VISIBLE_DEVICES=4,5,6,7 bash run_r2r/main_server.bash dagger 2333
+# CUDA_VISIBLE_DEVICES=4,5,6,7 bash run_r2r/main_server.bash grpo 2333
+# CUDA_VISIBLE_DEVICES=4,5,6,7 bash run_r2r/main_server.bash eval 2333
+# CUDA_VISIBLE_DEVICES=4,5,6,7 bash run_r2r/main_server.bash infer 2333

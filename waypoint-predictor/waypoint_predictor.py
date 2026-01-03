@@ -132,7 +132,7 @@ def predict_waypoints(args):
                 #     im.save("./play/depth_%s.png"%(kk))
 
                 ''' processing observations '''
-                rgb_feats = rgb_encoder(rgb_imgs)        # (BATCH_SIZE*ANGLES, 2048)
+                rgb_feats = rgb_encoder(rgb_imgs)        # (BATCH_SIZE*ANGLES, 512) - CLIP features
                 depth_feats = depth_encoder(depth_imgs)  # (BATCH_SIZE*ANGLES, 128, 4, 4)
 
                 ''' learning objectives '''

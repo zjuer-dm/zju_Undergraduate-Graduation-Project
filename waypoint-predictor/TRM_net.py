@@ -29,11 +29,9 @@ class BinaryDistPredictor_TRM(nn.Module):
         self.num_imgs = args.NUM_IMGS
         self.n_classes = n_classes
 
-        # self.visual_1by1conv_rgb = nn.Conv2d(
-        #     in_channels=2048, out_channels=512, kernel_size=1)
+        # RGB encoder FC - Modified for CLIP features (512-d)
         self.visual_fc_rgb = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(np.prod([2048,7,7]), hidden_dim),
+            nn.Linear(512, hidden_dim),  # 512 → 768 (CLIP ViT-B/32)
             nn.ReLU(True),
         )
         # self.visual_1by1conv_depth = nn.Conv2d(

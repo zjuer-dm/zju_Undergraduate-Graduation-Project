@@ -46,10 +46,10 @@ class BinaryDistPredictor_TRM(nn.Module):
         self.waypoint_TRM = WaypointBert(config=config)
 
         layer_norm_eps = config.layer_norm_eps
-        self.mergefeats_LayerNorm = BertLayerNorm(
-            hidden_dim,
-            eps=layer_norm_eps
-        )
+        # self.mergefeats_LayerNorm = BertLayerNorm(
+        #     hidden_dim,
+        #     eps=layer_norm_eps
+        # )
         self.mask = utils.get_attention_mask(
             num_imgs=self.num_imgs,
             neighbor=self.TRM_NEIGHBOR).to(self.device)

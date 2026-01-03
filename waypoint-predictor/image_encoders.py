@@ -2,33 +2,51 @@ import torch
 import torch.nn as nn
 import torchvision
 import numpy as np
+import clip  # CLIP encoder
 
 from ddppo_resnet.resnet_policy import PNResnetDepthEncoder
 
 class RGBEncoder(nn.Module):
+    """CLIP ViT-B/32 encoder for RGB images (replaces ResNet50)"""
     def __init__(self, resnet_pretrain=True, trainable=False):
         super(RGBEncoder, self).__init__()
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        
         if resnet_pretrain:
-            print('\nLoading Torchvision pre-trained Resnet50 for RGB ...')
-        rgb_resnet = torchvision.models.resnet50(pretrained=resnet_pretrain)
-        rgb_modules = list(rgb_resnet.children())[:-2]
-        rgb_net = torch.nn.Sequential(*rgb_modules)
-        self.rgb_net = rgb_net
-        for param in self.rgb_net.parameters():
+            print('\nLoading CLIP ViT-B/32 for RGB ...')
+        
+        self.model, _ = clip.load("ViT-B/32", device=device)
+        for param in self.model.parameters():
             param.requires_grad_(trainable)
-
-        # self.scale = 0.5
+        self.model.eval()
+        
+        from torchvision import transforms
+        self.rgb_transform = torch.nn.Sequential(
+            transforms.ConvertImageDtype(torch.float),
+            transforms.Normalize(
+                [0.48145466, 0.4578275, 0.40821073], 
+                [0.26862954, 0.26130258, 0.27577711]
+            ),
+        )
 
     def forward(self, rgb_imgs):
+        # rgb_imgs shape: (batch, num_imgs, H, W, C)
         rgb_shape = rgb_imgs.size()
-        rgb_imgs = rgb_imgs.reshape(rgb_shape[0]*rgb_shape[1],
-                                    rgb_shape[2], rgb_shape[3], rgb_shape[4])
-        rgb_feats = self.rgb_net(rgb_imgs)  # * self.scale
+        rgb_imgs = rgb_imgs.reshape(
+            rgb_shape[0]*rgb_shape[1], 
+            rgb_shape[2], rgb_shape[3], rgb_shape[4]
+        )
+        
+        # Convert to (batch, C, H, W)
+        rgb_imgs = rgb_imgs.permute(0, 3, 1, 2)
+        rgb_imgs = self.rgb_transform(rgb_imgs)
+        
+        # CLIP encoding
+        rgb_feats = self.model.encode_image(rgb_imgs.contiguous())
+        
+        # Output: (batch*num_imgs, 512)
+        return rgb_feats.float()
 
-        # print('rgb_imgs', rgb_imgs.shape)
-        # print('rgb_feats', rgb_feats.shape)
-
-        return rgb_feats.squeeze()
 
 
 class DepthEncoder(nn.Module):
