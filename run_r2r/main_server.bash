@@ -35,7 +35,7 @@ flag1="--exp_name release_r2r_dagger
       IL.waypoint_aug  True
       TASK_CONFIG.SIMULATOR.HABITAT_SIM_V0.ALLOW_SLIDING True
       TASK_CONFIG.DATASET.SUFFIX _90
-      MODEL.pretrained_path pretrained/r2r_rxr_ce/mlm.sap_habitat_depth/store2/model_step_367500.pt
+      MODEL.pretrained_path pretrained/r2r_rxr_ce_4cam/mlm.sap_habitat_depth/ckpts/model_step_455000.pt
       "
 
 flag2="--exp_name release_r2r_grpo
