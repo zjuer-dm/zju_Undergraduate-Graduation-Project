@@ -21,7 +21,7 @@ __pycache__/
 /extra_files
 /image_feature
 /precompute_img_features12
-waypoint-predictor/
+# waypoint-predictor/
 
 # --- 虚拟环境 ---
 venv/

@@ -8,8 +8,8 @@ import utils
 from scipy.spatial.distance import cdist
 from scipy.ndimage import gaussian_filter
 
-# 4-camera setup: 40 angle bins (was 120 for 12-camera)
-ANGLES = 40
+# 4-camera setup with 120 angles (higher resolution, same as 12-camera)
+ANGLES = 120
 DISTANCES = 12
 RAW_GRAPH_PATH = '/home/wdm/zju_Undergraduate-Graduation-Project/waypoint-predictor/habitat_connectivity_graph_folder/%s.json'
 

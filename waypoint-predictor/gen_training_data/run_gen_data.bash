@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to generate all waypoint predictor training data (4-camera version)
+# Script to generate all waypoint predictor training data (4-camera version with 120 angles)
 # Run this script from the waypoint-predictor directory
 #
 # Prerequisites:
@@ -95,8 +95,8 @@ echo "[Step 5] Val_unseen navigability dict generation completed!"
 echo ""
 echo "=========================================="
 echo "[Step 6] Generating final training data with obstacle info..."
-echo "Output: training_data/40_train_mp3d_waypoint_twm0.2_obstacle_first_withpos.json"
-echo "        training_data/40_val_unseen_mp3d_waypoint_twm0.2_obstacle_first_withpos.json"
+echo "Output: training_data/120_train_mp3d_waypoint_twm0.2_obstacle_first_withpos.json"
+echo "        training_data/120_val_unseen_mp3d_waypoint_twm0.2_obstacle_first_withpos.json"
 echo "=========================================="
 python gen_training_data/test_twm0.2_obstacle_first.py
 echo "[Step 6] Final training data generation completed!"
@@ -111,7 +111,7 @@ echo "  - training_data/rgbd_fov90_4cam/train/          (RGBD images)"
 echo "  - training_data/rgbd_fov90_4cam/val_unseen/     (RGBD images)"
 echo "  - gen_training_data/nav_dicts/navigability_dict_train.json"
 echo "  - gen_training_data/nav_dicts/navigability_dict_val_unseen.json"
-echo "  - training_data/40_train_mp3d_waypoint_twm0.2_obstacle_first_withpos.json"
-echo "  - training_data/40_val_unseen_mp3d_waypoint_twm0.2_obstacle_first_withpos.json"
+echo "  - training_data/120_train_mp3d_waypoint_twm0.2_obstacle_first_withpos.json"
+echo "  - training_data/120_val_unseen_mp3d_waypoint_twm0.2_obstacle_first_withpos.json"
 echo ""
 echo "Next step: Run 'bash run_waypoint.bash' to train the waypoint predictor"

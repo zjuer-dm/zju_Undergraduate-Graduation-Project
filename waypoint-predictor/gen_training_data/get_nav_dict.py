@@ -8,8 +8,8 @@ from utils import Simulator
 config_path = 'gen_training_data/config.yaml'
 scene_path = '/home/wdm/ETPNav/data/scene_datasets/mp3d/{scan}/{scan}.glb'
 RAW_GRAPH_PATH = '/home/wdm/zju_Undergraduate-Graduation-Project/waypoint-predictor/habitat_connectivity_graph_folder/%s.json'
-# 4-camera setup: 40 angle bins (was 120 for 12-camera, ratio 120/12=10, so 4*10=40)
-NUMBER = 40
+# 4-camera setup with 120 angles (higher resolution, same as 12-camera)
+NUMBER = 120
 
 SPLIT = 'val_unseen'
 
