@@ -26,7 +26,7 @@ __pycache__/
 venv/
 env/
 .venv/
-
+run_r2r_code/
 # --- IDE 配置 (不需要上传到服务器) ---
 .vscode/
 .idea/

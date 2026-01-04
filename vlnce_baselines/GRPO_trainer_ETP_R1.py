@@ -276,7 +276,7 @@ class RLTrainer(BaseVLNCETrainer):
         ''' initialize the waypoint predictor here '''
         from vlnce_baselines.waypoint_pred.TRM_net import BinaryDistPredictor_TRM
         self.waypoint_predictor = BinaryDistPredictor_TRM(device=self.device)
-        cwp_fn = 'data/wp_pred/check_cwp_bestdist_hfov63' if self.config.MODEL.task_type == 'rxr' else 'data/wp_pred/check_cwp_bestdist_hfov90'
+        cwp_fn = 'data/wp_pred/check_val_best_avg_wayscore_clip40' if self.config.MODEL.task_type == 'rxr' else 'data/wp_pred/check_val_best_avg_wayscore_clip40'
         self.waypoint_predictor.load_state_dict(torch.load(cwp_fn, map_location = torch.device('cpu'))['predictor']['state_dict']) 
         for param in self.waypoint_predictor.parameters():
             param.requires_grad_(False)

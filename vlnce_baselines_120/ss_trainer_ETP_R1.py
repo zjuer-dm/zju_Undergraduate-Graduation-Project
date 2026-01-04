@@ -30,18 +30,18 @@ from habitat_baselines.common.obs_transformers import (
 from habitat_baselines.common.tensorboard_utils import TensorboardWriter
 from habitat_baselines.utils.common import batch_obs
 
-from vlnce_baselines.common.aux_losses import AuxLosses
-from vlnce_baselines.common.base_il_trainer import BaseVLNCETrainer
-from vlnce_baselines.common.env_utils import construct_envs, construct_envs_for_rl, is_slurm_batch_job
-from vlnce_baselines.common.utils import extract_instruction_tokens
-from vlnce_baselines.models.graph_utils import GraphMap, MAX_DIST
-from vlnce_baselines.utils import reduce_loss
+from vlnce_baselines_120.common.aux_losses import AuxLosses
+from vlnce_baselines_120.common.base_il_trainer import BaseVLNCETrainer
+from vlnce_baselines_120.common.env_utils import construct_envs, construct_envs_for_rl, is_slurm_batch_job
+from vlnce_baselines_120.common.utils import extract_instruction_tokens
+from vlnce_baselines_120.models.graph_utils import GraphMap, MAX_DIST
+from vlnce_baselines_120.utils import reduce_loss
 
 from .utils import get_camera_orientations4  # 4-camera setup
 from .utils import (
     length2mask, dir_angle_feature_with_ele,
 )
-from vlnce_baselines.common.utils import dis_to_con, gather_list_and_concat
+from vlnce_baselines_120.common.utils import dis_to_con, gather_list_and_concat
 from habitat_extensions.measures import NDTW, StepsTaken
 from fastdtw import fastdtw
 
@@ -54,7 +54,7 @@ import gzip
 import json
 from copy import deepcopy
 from torch.cuda.amp import autocast, GradScaler
-from vlnce_baselines.common.ops import pad_tensors_wgrad, gen_seq_masks
+from vlnce_baselines_120.common.ops import pad_tensors_wgrad, gen_seq_masks
 from torch.nn.utils.rnn import pad_sequence
 import cv2
 from collections import OrderedDict
@@ -209,7 +209,7 @@ class RLTrainer(BaseVLNCETrainer):
         )
         logger.info(f"-------------------Load pretrain weight: {config.MODEL.pretrained_path}-------------------")
         ''' initialize the waypoint predictor here '''
-        from vlnce_baselines.waypoint_pred.TRM_net import BinaryDistPredictor_TRM
+        from vlnce_baselines_120.waypoint_pred.TRM_net import BinaryDistPredictor_TRM
         self.waypoint_predictor = BinaryDistPredictor_TRM(device=self.device)
         cwp_fn = 'data/wp_pred/check_val_best_avg_wayscore_clip40' if self.config.MODEL.task_type == 'rxr' else 'data/wp_pred/check_val_best_avg_wayscore_clip40'
         self.waypoint_predictor.load_state_dict(torch.load(cwp_fn, map_location = torch.device('cpu'))['predictor']['state_dict']) 

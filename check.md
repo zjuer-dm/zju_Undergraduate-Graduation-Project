@@ -288,4 +288,6 @@ HDF5 特征文件对比工具 (改进版)
 
 
 
-这是我的一个项目，介绍在 @README.md  @README_paper.md .现在，我需要把原版项目中12目的输入修改成4目的输入，我大部分代码已经修改好了 @record.md 。这里，我需要你帮我看看waypoint的训练。这里，我发现使用了@run_waypoint.bash#L9 后的效果不好，我想改成120 ，那么，@run_waypoint.bash#L20 应该改成15，帮我看看，训练wayoint的代码，还有什么需要修
+这是我的一个项目，介绍在 @README.md  @README_paper.md .现在，我需要把原版项目中12目的输入修改成4目的输入，我大部分代码已经修改好了 @record.md 。这里，我需要你帮我看看waypoint的训练。这里，我发现使用了@run_waypoint.bash#L9 后的效果不好，我想改成120 ，那么，@run_waypoint.bash#L20 应该改成15，帮我看看，训练wayoint的代码，还有什么需要修改的。
+
+好的，但是你知道，我原本的模型训练，使用的是12视角，现在改成了4视角.所以，waypoint的训练效果并不好。这里，@run_waypoint.bash#L9 以前是120 ，我觉得这个参数可以修改成120，虽然是4目。那这样的话，@run_waypoint.bash#L20 应该需要修改成15.我希望你帮我修改这个waypoint的代码，同时，修改其他waypoint训练的必要代码。同时，务必保证，

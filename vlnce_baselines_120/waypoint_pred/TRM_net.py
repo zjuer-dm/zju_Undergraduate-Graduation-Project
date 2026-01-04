@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-import vlnce_baselines.waypoint_pred.utils as utils
+import vlnce_baselines_120.waypoint_pred.utils as utils
 
 from .transformer.waypoint_bert import WaypointBert
 from pytorch_transformers import BertConfig
@@ -12,12 +12,12 @@ class BinaryDistPredictor_TRM(nn.Module):
 
         self.device = device
 
-        self.num_angles = 40   # 4-camera: 40 angles (360°/40 = 9° per angle)
+        self.num_angles = 120   # 4-camera with 120 angles (360°/120 = 3° per angle)
         self.num_imgs = 4       # 4-camera setup
         self.n_classes = 12  # num of distances
         self.TRM_LAYER = 2
         self.TRM_NEIGHBOR = 1
-        self.HEATMAP_OFFSET = 5  # 40/4/2 = 5
+        self.HEATMAP_OFFSET = 15  # 120/4/2 = 15
 
         # RGB encoder FC - Modified for CLIP features (512-d)
         # Must match training code structure exactly!

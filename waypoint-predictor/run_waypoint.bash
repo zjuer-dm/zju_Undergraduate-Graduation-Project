@@ -1,12 +1,12 @@
 
 export CUDA_VISIBLE_DEVICES=0
 
-flag="--EXP_ID wp-train-4cam
+flag="--EXP_ID wp-train-4cam_clip_120angles
 
       --TRAINEVAL train
       --VIS 0
 
-      --ANGLES 40
+      --ANGLES 120
       --NUM_IMGS 4
 
       --EPOCH 300
@@ -17,7 +17,7 @@ flag="--EXP_ID wp-train-4cam
 
       --TRM_LAYER 2
       --TRM_NEIGHBOR 1
-      --HEATMAP_OFFSET 5
+      --HEATMAP_OFFSET 15
       --HIDDEN_DIM 768"
 
 python waypoint_predictor.py $flag
