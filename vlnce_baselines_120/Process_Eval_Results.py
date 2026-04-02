@@ -222,8 +222,8 @@ def main():
 
     # 这部分路径你可以根据需要修改回原来的固定路径
     # base_dir = input("请输入 checkpoint 的根目录 (例如: data/logs/checkpoints/release_r2r_dagger): ")
-    base_dir = "data/logs/checkpoints/release_r2r_dagger"
-    results_dir = os.path.join(base_dir, "store", "eval_results")
+    base_dir = "/home/wdm/workspace/zju_Undergraduate-Graduation-Project/data/logs/checkpoints/release_r2r_grpo"
+    results_dir = os.path.join(base_dir,  "eval_results")
     checkpoints_dir = base_dir
 
     if not os.path.isdir(results_dir):
